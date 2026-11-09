@@ -71,6 +71,8 @@ class WebViewRegistry(
             webView.settings.builtInZoomControls = false
             webView.settings.setSupportMultipleWindows(true)
             webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+            webView.settings.useWideViewPort = true
+            webView.settings.loadWithOverviewMode = true
             webView.isLongClickable = true
             webView.setOnLongClickListener {
                 val hit = webView.hitTestResult
@@ -164,6 +166,11 @@ class ABDMWebViewClient(
             }
         }
         return super.shouldInterceptRequest(view, request)
+    }
+
+    override fun onPageFinished(view: WebView, url: String?) {
+        super.onPageFinished(view, url)
+        UserScriptInjector.injectFor(view, url)
     }
 
     override fun shouldOverrideUrlLoading(
